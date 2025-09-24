@@ -1,2 +1,2 @@
 @echo off
-python "PATH_TO\tracker.py"
+python "D:\Tools\HackNews\tracker.py"
