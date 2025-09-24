@@ -49,15 +49,19 @@ Open `.env` file and fill your actual tokens and settings.
 Example `.env`:
 
 ```
-TELEGRAM_BOT_TOKEN=
-TELEGRAM_CHAT_ID=
-TWITTER_BEARER_TOKEN=
-DISCORD_WEBHOOK_URL=
-USER_MIN_NEWS=10
-USER_MAX_NEWS=18
-HASHTAGS=CVE,0day,exploit,infosec
-ALLOW_DUPLICATES=false
-SHOW_SUMMARY=true
+
+| | Description | Required | Variable |
+| :--- | :--- | :--- | :--- |
+| | Bot token from @BotFather | Yes | `TELEGRAM_BOT_TOKEN` |
+| | Chat ID for receiving messages | Yes | `TELEGRAM_CHAT_ID` |
+| | Send alerts to Discord | Optional | `DISCORD_WEBHOOK_URL` |
+| | Improves Twitter results | Optional | `TWITTER_BEARER_TOKEN` |
+| | Minimum news per run | Yes | `USER_MIN_NEWS` |
+| | Maximum news per run | Yes | `USER_MAX_NEWS` |
+| | Comma-separated keywords | Yes | `HASHTAGS` |
+| | `true/false` | Yes | `ALLOW_DUPLICATES` |
+| | Show console summary `true/false` | Yes | `SHOW_SUMMARY` |
+
 ```
 
 * `TELEGRAM_BOT_TOKEN` — token from BotFather.
