@@ -129,23 +129,39 @@ How to get it:
 ---
 
 ## Schedule with Windows Task Scheduler
+تمام، أقدر أصيغلك الجزء ده من README بطريقة أوضح لأي مستخدم، مع توضيح **تغيير المسار الحقيقي** داخل كل من الأوامر وفي ملفات البات والـ VBS:
+
+---
+
+## Schedule with Windows Task Scheduler
 
 You can schedule the tracker to run automatically every day at **10:00 AM**.
+
+> ⚠️ **Important:** Replace `PATH_TO` with the full path where you cloned the repository, e.g., `D:\Tools\HackNews`.
+> Also make sure the paths inside `run_tracker.bat` and `run_tracker_silent.vbs` match the actual folder location.
 
 ### Option 1 — Silent (recommended)
 
 Runs via a VBS wrapper so no CMD window is visible:
 
 ```cmd
-schtasks /create /sc daily /st 10:00 /tn "HackNews Daily Tracker" /tr "wscript.exe \"D:PATH_TO\run_tracker_silent.vbs\"" /f
+schtasks /create /sc daily /st 10:00 /tn "HackNews Daily Tracker" /tr "wscript.exe \"D:\Tools\HackNews\run_tracker_silent.vbs\"" /f
 ```
+
+* Edit `run_tracker_silent.vbs` if necessary to match the actual path of `run_tracker.bat`.
 
 ### Option 2 — Direct batch (visible console)
 
 Runs the batch file directly (a CMD window will appear when it runs):
 
 ```cmd
-schtasks /create /sc daily /st 10:00 /tn "HackNews Daily Tracker" /tr "\"PATH_TO\run_tracker.bat\"" /f
+schtasks /create /sc daily /st 10:00 /tn "HackNews Daily Tracker" /tr "\"D:\Tools\HackNews\run_tracker.bat\"" /f
+```
+
+* Make sure the `.bat` file has the correct path to `tracker.py` inside it.
+
+---
+
 ```
 <img width="2571" height="140" alt="image" src="https://github.com/user-attachments/assets/1a1b49fd-1b64-4670-93cf-b0edf0689ee3" />
 
