@@ -157,51 +157,34 @@ After the scheduled run you can check `tracker.log` (if using silent) or run a v
 
 ---
 
-## How It Works :
 
-**Sources**
+### How It Works
 
-Reads news from configured RSS feeds (RSS_FEEDS) plus Reddit & Twitter hashtag searches (HASHTAGS).
+---
 
-If an RSS entry lacks a publish date, the script fetches the article page and tries to extract article:published_time / <time datetime> metadata.
+### **Sources**
+The script gathers news from multiple sources:
+* **RSS Feeds**: It reads from a list of configured RSS feeds (`RSS_FEEDS`).
+* **Reddit & Twitter**: It performs hashtag searches on Reddit and Twitter using the `HASHTAGS` list from the `.env` file.
 
-Only “today” items
+If an RSS entry is missing a publication date, the script tries to extract the `article:published_time` or other date metadata directly from the article's webpage.
 
-The script keeps only items published on the same calendar day in X timezone (timezone). Older items are ignored.
+### **Processing**
+The script only considers items published on the current calendar day, based on the `Africa/Cairo` timezone.
 
-Dedupe / grouping
+It then performs these steps:
+* **Deduplication & Grouping**: Similar news items are grouped together using a normalized title or a unique ID generated from the title and link. This group collects all links and sources for that specific story.
+* **Classification**: Each item is classified into categories like **technique**, **attack**, **apt**, **security_tech**, or **vulnerability** based on a list of keywords.
+* **Scoring & Ranking**: A score is calculated for each item based on the number of unique sources and the presence of high-importance keywords such as `ransomware`, `exploit`, `0day`, `apt`, and `CVE`. The final list of items is sorted in descending order by score.
 
-Similar items are grouped by a normalized title key (fallback to SHA256(title||link)).
+### **Duplicate Prevention**
+To avoid sending the same notification multiple times, each item that is sent is given a unique ID and stored in `data/seen.json`. Items already in this file will not be notified again unless `ALLOW_DUPLICATES` is set to `true` in the `.env` file for testing purposes.
 
-A group collects all links and sources where that story appeared.
+### **Notifications**
+Once the items are processed and filtered, the script sends plain-text notifications to Telegram and Discord. A console summary can also be displayed during local runs by setting `SHOW_SUMMARY` to `true`. The summary is not sent to the notification channels.
 
-**Classification**
-
-Rule-based classification using keyword lists into:
-technique, attack, apt, security_tech, vulnerability, or other.
-
-Scoring / ranking
-
-Score = number_of_distinct_sources + keyword_hits (keywords such as ransomware, exploit, 0day, apt, CVE, ...).
-
-Items are sorted descending by score (then by number of sources).
-
-Duplicate prevention
-
-Each notified item gets an ID (SHA256(title||top_link)) stored in data/seen.json.
-
-Items already in seen.json are not re-notified unless .env contains ALLOW_DUPLICATES=true (testing mode).
-
-**Notifications**
-
-Sends plain text notifications to Telegram and Discord.
-
-Console summary output is optional (SHOW_SUMMARY=true), intended for local runs only — summaries are not sent to Telegram/Discord.
-
-Optional: GitHub code search
-
-You can optionally enable GitHub code search (requires GITHUB_TOKEN) to query repositories for relevant keywords. Use cautiously — results may include PoC code and must be used only for defensive OSINT.
- 
+### **Optional Features**
+**GitHub Code Search:** You can enable an optional GitHub code search by providing a `GITHUB_TOKEN`. This feature queries repositories for relevant keywords and may return Proof of Concept (PoC) code, which should be used carefully for defensive OSINT purposes.
  --- 
  
 **Example Discord webhook message.**:
