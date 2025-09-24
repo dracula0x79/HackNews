@@ -162,7 +162,7 @@ schtasks /create /sc daily /st 10:00 /tn "HackNews Daily Tracker" /tr "\"D:\Tool
 
 ---
 
-```
+
 <img width="2571" height="140" alt="image" src="https://github.com/user-attachments/assets/1a1b49fd-1b64-4670-93cf-b0edf0689ee3" />
 
 
