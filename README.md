@@ -126,12 +126,6 @@ How to get it:
 
 ---
 
----
-
-## Schedule with Windows Task Scheduler
-تمام، أقدر أصيغلك الجزء ده من README بطريقة أوضح لأي مستخدم، مع توضيح **تغيير المسار الحقيقي** داخل كل من الأوامر وفي ملفات البات والـ VBS:
-
----
 
 ## Schedule with Windows Task Scheduler
 
