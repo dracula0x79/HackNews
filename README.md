@@ -124,36 +124,42 @@ How to get it:
 
 ---
 
-**But we will do it on Scheduler so that it will work automatically every day at 9:00 AM .**
+**We will schedule the script with Windows Task Scheduler so it runs automatically every day at 09:00.**
 
-5. **Schedule daily runs**
-   Use `run_tracker.bat` with Windows Task Scheduler (steps below) to run at the time you choose.
+### Run automatically every day at 09:00 AM
 
+```powershell
+run_tracker.bat
+```
 
-## Running:
+**Schedule daily runs (Windows Task Scheduler)**
 
-* `run_tracker.bat`
+1. Open **Task Scheduler** and choose **Create Task...**.
+2. **General**
 
----
+   * Name: `HackNews Daily Tracker`
+   * (Optional) Set "Run whether user is logged on or not" if you want it to run when you are signed out.
+3. **Triggers** → **New\...**
 
-## Schedule daily runs (Windows Task Scheduler example)
+   * Begin the task: **On a schedule** → **Daily**
+   * Start: set the date and time (**09:00:00 AM**) → **OK**
+4. **Actions** → **New\...**
 
-1. Open Task Scheduler → Create Task.
-2. Name: `HackNews Daily Tracker`.
-3. Triggers → New → Daily → Set time (e.g., 09:00) → OK.
-4. Actions → New:
-
-   * Program/script: `C:\Windows\System32\cmd.exe`
-   * Add arguments:
+   * Action: **Start a program**
+   * **Program/script:** `C:\Windows\System32\cmd.exe`
+   * **Add arguments:**
 
      ```
      /c "C:\path\to\tracker-repo\run_tracker.bat"
      ```
-   * Start in: `C:\path\to\tracker-repo`
-5. Settings: enable "Run task as soon as possible if missed" if needed.
-6. Save (you may be prompted for a Windows account password).
 
-After the scheduled run you can check `tracker.log` (if using silent) or run a visible batch file to see the summary.
+   * **Start in:**
+
+     ```
+     C:\path\to\tracker-repo
+     ```
+   * **OK**
+5. **Save** the task. You may be prompted to enter the Windows account password to allow the task to run as that user.
 
 ---
 
