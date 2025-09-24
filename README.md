@@ -198,6 +198,7 @@ Once the items are processed and filtered, the script sends plain-text notificat
 
 ### **Optional Features**
 **GitHub Code Search:** You can enable an optional GitHub code search by providing a `GITHUB_TOKEN`. This feature queries repositories for relevant keywords and may return Proof of Concept (PoC) code, which should be used carefully for defensive OSINT purposes.
+ 
  --- 
  
 **Example Discord webhook message.**:
