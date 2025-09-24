@@ -126,8 +126,6 @@ How to get it:
 
 ---
 
-تمام ✅ دي نسخة مختصرة، مخصوص للجزء بتاع **Task Scheduler**، تحطها في الـ **README.md** على GitHub:
-
 ---
 
 ## Schedule with Windows Task Scheduler
@@ -149,6 +147,7 @@ Runs the batch file directly (a CMD window will appear when it runs):
 ```cmd
 schtasks /create /sc daily /st 10:00 /tn "HackNews Daily Tracker" /tr "\"PATH_TO\run_tracker.bat\"" /f
 ```
+<img width="2571" height="140" alt="image" src="https://github.com/user-attachments/assets/1a1b49fd-1b64-4670-93cf-b0edf0689ee3" />
 
 
 * Run immediately (test):
