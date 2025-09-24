@@ -49,19 +49,20 @@ Open `.env` file and fill your actual tokens and settings.
 Example `.env`:
 
 ```
-
-| | Description | Required | Variable |
-| :--- | :--- | :--- | :--- |
-| | Bot token from @BotFather | Yes | `TELEGRAM_BOT_TOKEN` |
-| | Chat ID for receiving messages | Yes | `TELEGRAM_CHAT_ID` |
-| | Send alerts to Discord | Optional | `DISCORD_WEBHOOK_URL` |
-| | Improves Twitter results | Optional | `TWITTER_BEARER_TOKEN` |
-| | Minimum news per run | Yes | `USER_MIN_NEWS` |
-| | Maximum news per run | Yes | `USER_MAX_NEWS` |
-| | Comma-separated keywords | Yes | `HASHTAGS` |
-| | `true/false` | Yes | `ALLOW_DUPLICATES` |
-| | Show console summary `true/false` | Yes | `SHOW_SUMMARY` |
-
+SERPAPI_API_KEY=
+GITHUB_TOKEN=
+TWITTER_BEARER_TOKEN=  Optional
+NITTER_INSTANCE=https://nitter.net
+TELEGRAM_BOT_TOKEN=
+TELEGRAM_CHAT_ID=
+DISCORD_WEBHOOK_URL=      Optional
+POLL_INTERVAL_MINUTES=180
+FETCH_FULL_ARTICLE=true
+HASHTAGS=CVE,0day,exploit,infosec,bugbountytips,BugBounty,databreach
+USER_MIN_NEWS=10
+USER_MAX_NEWS=18
+ALLOW_DUPLICATES=false
+SHOW_SUMMARY=true
 ```
 
 * `TELEGRAM_BOT_TOKEN` — token from BotFather.
