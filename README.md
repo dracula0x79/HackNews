@@ -18,22 +18,10 @@ A simple Python tracker that collects **today’s** hacking / security news from
 ## Requirements
 
 * Python 3.8+
-* Windows (instructions below); works on Linux too (use equivalent commands)
-
-`requirements.txt`:
-
-```
-requests
-feedparser
-beautifulsoup4
-lxml
-python-dotenv
-colorama
-```
-
+* Discord Server OR Telegram *
 ---
 
-## Quick start
+## How To Install
 
 1. **Clone the repo**
 
@@ -42,59 +30,32 @@ colorama
    cd HackNews
    ```
 
-2. **Create and activate a virtual environment (recommended for Linux)**
-
-   ```powershell
-   python -m venv .venv
-   .\.venv\Scripts\activate
-   ```
-
-3. **Install dependencies**
+2. **Install dependencies**
 
    ```powershell
    pip install -r requirements.txt
    ```
 
-4. **Create `.env`**
-
-   ```powershell
-   copy .env.example .env
-   ```
-
    Then open `.env` with Notepad and fill the required values (see next section).
 
-5. **Run once (verbose)**
 
-   ```powershell
-   python tracker.py
-   ```
-
-   Or use `run_tracker.bat` to open a window and show the console summary.
-
-6. **Schedule daily runs**
-   Use `run_tracker_silent.bat` with Windows Task Scheduler (steps below) to run at the time you choose (e.g., 09:00).
-
----
-
+   
 ## `.env` configuration
 
-Copy `.env.example` to `.env` and fill your actual tokens and settings. **Do not commit `.env` to GitHub.**
+Open `.env` file and fill your actual tokens and settings.
 
 Example `.env`:
 
 ```
 TELEGRAM_BOT_TOKEN=
 TELEGRAM_CHAT_ID=
+TWITTER_BEARER_TOKEN=
 DISCORD_WEBHOOK_URL=
-
 USER_MIN_NEWS=10
 USER_MAX_NEWS=18
 HASHTAGS=CVE,0day,exploit,infosec
-
 ALLOW_DUPLICATES=false
 SHOW_SUMMARY=true
-
-TWITTER_BEARER_TOKEN=
 ```
 
 * `TELEGRAM_BOT_TOKEN` — token from BotFather.
@@ -122,14 +83,13 @@ TWITTER_BEARER_TOKEN=
 2. On your machine, request updates:
 
    ```powershell
+   Browse "https://api.telegram.org/bot<YOUR_TOKEN>/getUpdates"
+   Or
    curl -s "https://api.telegram.org/bot<YOUR_TOKEN>/getUpdates"
    ```
-
    Replace `<YOUR_TOKEN>` with the bot token. Look for `chat.id` in the returned JSON and copy that number to `TELEGRAM_CHAT_ID`.
 
-   <img width="2868" height="1622" alt="image" src="https://github.com/user-attachments/assets/d9853a53-4f53-4b1e-87ae-5bb0e2da3d21" />
-
-> Note: Group chat IDs may be negative or start with `-100...`. Use the value exactly as returned.
+<img width="2868" height="1622" alt="image" src="https://github.com/user-attachments/assets/d9853a53-4f53-4b1e-87ae-5bb0e2da3d21" />
 
 ---
 
@@ -137,6 +97,7 @@ TWITTER_BEARER_TOKEN=
 
 1. In Discord, open Server → Channel → Edit Channel → Integrations → Webhooks → New Webhook.
 2. Copy the webhook URL and paste it into `DISCORD_WEBHOOK_URL` in `.env`.
+
 <img width="2472" height="1021" alt="image" src="https://github.com/user-attachments/assets/93811142-bc1a-4d99-be13-e8a665cd92e8" />
 
 ## GitHub token (if you want better code search)
@@ -144,12 +105,30 @@ TWITTER_BEARER_TOKEN=
 Why: To increase the rate limit and get access to GitHub’s code search API.
 
 How to get it:
-Go to https://github.com/settings/tokens
+1. Go to https://github.com/settings/tokens
+2. Generate new token → Select permissions for repo or public_repo, read:packages, and search (if visible).
+3. Copy the token and put it in GITHUB_TOKEN in .env .
+4. Note: Keep the token personal and do not share it publicly.
 
 <img width="2874" height="1480" alt="image" src="https://github.com/user-attachments/assets/c0dc9ddd-4b07-46b4-962f-1a9b9aef3341" />
 
+---
+
+4. **Run once (verbose)**
+
+   ```powershell
+   python tracker.py
+   ```
+
+   <img width="2362" height="1263" alt="image" src="https://github.com/user-attachments/assets/3ccdd75c-cecc-4414-ba2f-7c21e90a82c0" />
 
 ---
+
+**But we will do it on Scheduler so that it will work automatically every day at 9:00 AM .**
+
+5. **Schedule daily runs**
+   Use `run_tracker.bat` with Windows Task Scheduler (steps below) to run at the time you choose.
+
 
 ## Running:
 
@@ -168,7 +147,7 @@ Go to https://github.com/settings/tokens
    * Add arguments:
 
      ```
-     /c "C:\path\to\tracker-repo\run_tracker_silent.bat"
+     /c "C:\path\to\tracker-repo\run_tracker.bat"
      ```
    * Start in: `C:\path\to\tracker-repo`
 5. Settings: enable "Run task as soon as possible if missed" if needed.
@@ -178,28 +157,60 @@ After the scheduled run you can check `tracker.log` (if using silent) or run a v
 
 ---
 
-## Troubleshooting
+## How It Works :
 
-* **No Telegram messages**
+**Sources**
 
-  * Confirm `TELEGRAM_BOT_TOKEN` and `TELEGRAM_CHAT_ID` in `.env`.
-  * Test sending a message via API:
+Reads news from configured RSS feeds (RSS_FEEDS) plus Reddit & Twitter hashtag searches (HASHTAGS).
 
-    ```powershell
-    curl -s "https://api.telegram.org/bot<YOUR_TOKEN>/sendMessage" -d chat_id=<CHAT_ID> -d text="test"
-    ```
-* **No Discord messages**
+If an RSS entry lacks a publish date, the script fetches the article page and tries to extract article:published_time / <time datetime> metadata.
 
-  * Open the webhook URL in a browser to test, or:
+Only “today” items
 
-    ```powershell
-    curl -H "Content-Type: application/json" -d "{\"content\":\"test\"}" <WEBHOOK_URL>
-    ```
-* **Script shows zero new items**
+The script keeps only items published on the same calendar day in X timezone (timezone). Older items are ignored.
 
-  * The script stores notifications in `data/seen.json`. Delete or edit that file to reset notifications for testing.
-  * For testing-only, set `ALLOW_DUPLICATES=true` in `.env` to force notifications every run.
-* **Twitter not returning data**
+Dedupe / grouping
 
-  * Fill `TWITTER_BEARER_TOKEN` if you want Twitter support. If empty, Twitter steps are skipped.
+Similar items are grouped by a normalized title key (fallback to SHA256(title||link)).
+
+A group collects all links and sources where that story appeared.
+
+**Classification**
+
+Rule-based classification using keyword lists into:
+technique, attack, apt, security_tech, vulnerability, or other.
+
+Scoring / ranking
+
+Score = number_of_distinct_sources + keyword_hits (keywords such as ransomware, exploit, 0day, apt, CVE, ...).
+
+Items are sorted descending by score (then by number of sources).
+
+Duplicate prevention
+
+Each notified item gets an ID (SHA256(title||top_link)) stored in data/seen.json.
+
+Items already in seen.json are not re-notified unless .env contains ALLOW_DUPLICATES=true (testing mode).
+
+**Notifications**
+
+Sends plain text notifications to Telegram and Discord.
+
+Console summary output is optional (SHOW_SUMMARY=true), intended for local runs only — summaries are not sent to Telegram/Discord.
+
+Optional: GitHub code search
+
+You can optionally enable GitHub code search (requires GITHUB_TOKEN) to query repositories for relevant keywords. Use cautiously — results may include PoC code and must be used only for defensive OSINT.
+ 
+ --- 
+ 
+**Example Discord webhook message.**:
+<img width="2750" height="1553" alt="image" src="https://github.com/user-attachments/assets/03eeb35a-4dbc-47b4-b9b8-be3f5c6f3092" />
+
+**Example Telegram notification received.**:
+<img width="2880" height="1660" alt="image" src="https://github.com/user-attachments/assets/42c5df2c-9df8-4b46-91af-bc692dc461db" />
+
+
+
+
 
