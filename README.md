@@ -1,5 +1,7 @@
 # HackNews
 
+<img width="1024" height="1024" alt="unnamed" src="https://github.com/user-attachments/assets/e9f0dabf-a4db-4102-8265-2f36fdc7d090" />
+
 A simple Python tracker that collects **today’s** hacking / security news from popular RSS feeds, Reddit and Twitter hashtags, ranks and classifies them, and sends plain-text notifications to Telegram and Discord. Designed to be run automatically (for example via Task Scheduler) and safe for defensive OSINT use.
 
 ---
