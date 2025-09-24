@@ -124,42 +124,48 @@ How to get it:
 
 ---
 
-**We will schedule the script with Windows Task Scheduler so it runs automatically every day at 09:00.**
+تمام ✅ دي نسخة مختصرة، مخصوص للجزء بتاع **Task Scheduler**، تحطها في الـ **README.md** على GitHub:
 
-### Run automatically every day at 09:00 AM
+---
 
-```powershell
-run_tracker.bat
+## Schedule with Windows Task Scheduler
+
+You can schedule the tracker to run automatically every day at **10:00 AM**.
+
+### Option 1 — Silent (recommended)
+
+Runs via a VBS wrapper so no CMD window is visible:
+
+```cmd
+schtasks /create /sc daily /st 10:00 /tn "HackNews Daily Tracker" /tr "wscript.exe \"D:PATH_TO\run_tracker_silent.vbs\"" /f
 ```
 
-**Schedule daily runs (Windows Task Scheduler)**
+### Option 2 — Direct batch (visible console)
 
-1. Open **Task Scheduler** and choose **Create Task...**.
-2. **General**
+Runs the batch file directly (a CMD window will appear when it runs):
 
-   * Name: `HackNews Daily Tracker`
-   * (Optional) Set "Run whether user is logged on or not" if you want it to run when you are signed out.
-3. **Triggers** → **New\...**
+```cmd
+schtasks /create /sc daily /st 10:00 /tn "HackNews Daily Tracker" /tr "\"PATH_TO\run_tracker.bat\"" /f
+```
 
-   * Begin the task: **On a schedule** → **Daily**
-   * Start: set the date and time (**09:00:00 AM**) → **OK**
-4. **Actions** → **New\...**
 
-   * Action: **Start a program**
-   * **Program/script:** `C:\Windows\System32\cmd.exe`
-   * **Add arguments:**
+* Run immediately (test):
 
-     ```
-     /c "C:\path\to\tracker-repo\run_tracker.bat"
-     ```
+  ```cmd
+  schtasks /run /tn "HackNews Daily Tracker"
+  ```
 
-   * **Start in:**
+* Verify the task:
 
-     ```
-     C:\path\to\tracker-repo
-     ```
-   * **OK**
-5. **Save** the task. You may be prompted to enter the Windows account password to allow the task to run as that user.
+  ```cmd
+  schtasks /query /tn "HackNews Daily Tracker" /fo LIST /v
+  ```
+
+* Delete the task:
+
+  ```cmd
+  schtasks /delete /tn "HackNews Daily Tracker" /f
+  ```
 
 ---
 
